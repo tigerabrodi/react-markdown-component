@@ -64,6 +64,18 @@ describe("headings", () => {
       },
     ] satisfies MarkdownElement[]);
   });
+
+  it("should return # with no space as a paragraph", () => {
+    const markdown = "#Hello World";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        content: "#Hello World",
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
 });
 
 describe("paragraphs", () => {

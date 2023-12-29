@@ -50,11 +50,21 @@ export function parseMarkdownElements(text: string): MarkdownElement[] {
   let index = 0;
 
   while (index < text.length) {
-    if (text[index] === "#") {
-      const { element, endIndex } = parseHeading(text, index);
-      elements.push(element);
-      index = endIndex;
-    } else if (text.startsWith(BREAKPOINT, index)) {
+    const isHeading =
+      text[index] === "#" &&
+      text[index + getHeadingLevel(text.slice(index))] === " "; // make sure it is an actual heading
+
+    const isBreakpoint = text.startsWith(BREAKPOINT, index);
+
+    if (isHeading) {
+      const parsedHeading = parseHeading(text, index);
+      if (parsedHeading) {
+        elements.push(parsedHeading.element);
+        index = parsedHeading.endIndex;
+      }
+
+      // If not a valid heading, let the paragraph logic handle it
+    } else if (isBreakpoint) {
       elements.push({ type: "breakpoint", id: uuidv4() });
       index += BREAKPOINT.length;
     } else {
