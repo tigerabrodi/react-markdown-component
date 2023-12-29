@@ -457,8 +457,8 @@ describe("bold", () => {
 });
 
 describe("italics", () => {
-  it.only("should parse a single italics", () => {
-    const markdown = "*Hello World*";
+  it("should parse a single italics", () => {
+    const markdown = "_Hello World_";
     const elements = parseMarkdownElements(markdown);
     expect(elements).toEqual([
       {
@@ -476,7 +476,7 @@ describe("italics", () => {
   });
 
   it("should parse a single italics with a breakpoint", () => {
-    const markdown = "*Hello World*\n\n";
+    const markdown = "_Hello World_\n\n";
     const elements = parseMarkdownElements(markdown);
     expect(elements).toEqual([
       {
@@ -484,6 +484,66 @@ describe("italics", () => {
         tags: [
           {
             type: "italic",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+      {
+        type: "breakpoint",
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+
+  it("should parse italics with normal text", () => {
+    const markdown = "Hello _World_";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello ",
+            id: expect.any(String),
+          },
+          {
+            type: "italic",
+            content: "World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+
+  it("should parse italics with bold and breakpoint", () => {
+    const markdown = "Hello _World_ **Hello World**\n\n";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello ",
+            id: expect.any(String),
+          },
+          {
+            type: "italic",
+            content: "World",
+            id: expect.any(String),
+          },
+          {
+            type: "normal",
+            content: " ",
+            id: expect.any(String),
+          },
+          {
+            type: "bold",
             content: "Hello World",
             id: expect.any(String),
           },
