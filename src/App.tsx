@@ -16,6 +16,11 @@ const MarkdownComponents: Record<
   MarkdownComponentType
 > = {
   h1: ({ children }) => <h1>{children}</h1>,
+  h2: ({ children }) => <h2>{children}</h2>,
+  h3: ({ children }) => <h3>{children}</h3>,
+  h4: ({ children }) => <h4>{children}</h4>,
+  h5: ({ children }) => <h5>{children}</h5>,
+  h6: ({ children }) => <h6>{children}</h6>,
   breakpoint: () => <br />,
 };
 
@@ -47,7 +52,7 @@ export function App() {
         </div>
 
         <div className="preview">
-          <h2>Preview</h2>
+          <h2 className="preview-title">Preview</h2>
           <div className="content">
             {markdownElements.map((markdownElement) => {
               const Component =
