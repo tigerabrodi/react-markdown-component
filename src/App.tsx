@@ -1,7 +1,9 @@
+import "./App.css";
+
 export function App() {
   return (
     <main>
-      <h1>Hello, world!</h1>
+      <h1>Markdown Preview Playground</h1>
       <div className="wrapper">
         <div className="markdown">
           <h2>Markdown Textarea</h2>
