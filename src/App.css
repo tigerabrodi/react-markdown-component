@@ -63,15 +63,6 @@ main h1 {
     display: flex;
     flex-direction: column;
 
-    & h1,
-    & h2,
-    & h3,
-    & h4,
-    & h5,
-    & h6 {
-      font-weight: 700;
-    }
-
     & h1 {
       font-size: calc(50 / 16 * 1rem);
     }
