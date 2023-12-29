@@ -1,13 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
+import { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import debounce from "lodash.debounce";
 import "./App.css";
 
-type MarkdownElement = {
+export type MarkdownElement = {
   // TODO: add more types
   type: "h1";
   content: string;
   id: string;
 };
+
+type MarkdownComponentType = FC<{ children: ReactNode }>;
+
+const MarkdownComponents: Record<
+  MarkdownElement["type"],
+  MarkdownComponentType
+> = {
+  h1: ({ children }) => <h1>{children}</h1>,
+};
+
+const DefaultComponent: MarkdownComponentType = ({ children }) => (
+  <div>{children}</div>
+);
 
 export function App() {
   const [textareaContent, setTextareaContent] = useState("");
@@ -47,11 +60,15 @@ export function App() {
         <div className="preview">
           <h2>Preview</h2>
           <div className="content">
-            {markdownElements.map((markdownElement, index) => (
-              <markdownElement.type key={markdownElement.id}>
-                {markdownElement.content}
-              </markdownElement.type>
-            ))}
+            {markdownElements.map((markdownElement) => {
+              const Component =
+                MarkdownComponents[markdownElement.type] || DefaultComponent;
+              return (
+                <Component key={markdownElement.id}>
+                  {markdownElement.content}
+                </Component>
+              );
+            })}
           </div>
         </div>
       </div>
