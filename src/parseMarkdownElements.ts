@@ -4,6 +4,8 @@ import { GetTypesStartingWithPrefix, MarkdownElement, Tag } from "./types";
 const BREAKPOINT = "\n\n";
 const NEWLINE = "\n";
 
+const BOLD_SIGN = "**";
+
 const REGEX_HEADING = /^#+/; // ^ means start of string, #+ means one or more '#'
 
 function createTextTag(text: string): Tag {
@@ -49,6 +51,66 @@ function parseHeading(
   };
 }
 
+function parseBoldText(
+  text: string
+): { tag: Tag; boldStartIndex: number; afterEndBoldIndex: number } | null {
+  const boldStartIndex = text.indexOf(BOLD_SIGN);
+  if (boldStartIndex === -1) return null;
+
+  const boldEndIndex = text.indexOf(BOLD_SIGN, boldStartIndex + 2);
+  if (boldEndIndex === -1) return null;
+
+  const content = text.slice(boldStartIndex + 2, boldEndIndex).trim();
+
+  return {
+    tag: {
+      type: "bold",
+      content,
+      id: uuidv4(),
+    },
+    boldStartIndex,
+    afterEndBoldIndex: boldEndIndex + 2, // +2 to account for the '**'
+  };
+}
+
+function parseParagraph(
+  text: string,
+  startIndex: number,
+  endIndex: number
+): MarkdownElement {
+  let index = startIndex;
+  const tags: Tag[] = [];
+
+  while (index < endIndex) {
+    const remainingText = text.slice(index, endIndex);
+    const boldResult = parseBoldText(remainingText);
+
+    if (boldResult) {
+      if (boldResult.boldStartIndex > 0) {
+        // `boldResult.startIndex > 0` means bold text is not at the beginning of the paragraph, so from the beginning of the paragraph to the start of the bold text is normal text
+        const textBeforeBold = remainingText.slice(
+          0,
+          boldResult.boldStartIndex
+        );
+        tags.push(createTextTag(textBeforeBold));
+      }
+
+      // Add the bold text
+      tags.push(boldResult.tag);
+      index += boldResult.afterEndBoldIndex; // Move index past the bold text
+    } else {
+      tags.push(createTextTag(remainingText));
+      break;
+    }
+  }
+
+  return {
+    type: "p",
+    tags,
+    id: uuidv4(),
+  };
+}
+
 export function parseMarkdownElements(text: string): MarkdownElement[] {
   const elements: MarkdownElement[] = [];
   let index = 0;
@@ -72,19 +134,15 @@ export function parseMarkdownElements(text: string): MarkdownElement[] {
       elements.push({ type: "breakpoint", id: uuidv4() });
       index += BREAKPOINT.length;
     } else {
-      const endOfCurrentLine =
+      const endOfCurrentLineIndex =
         text.indexOf(NEWLINE, index) === -1
           ? text.length
           : text.indexOf(NEWLINE, index);
-      const textFromCurrentPositionToEnd = text.slice(index, endOfCurrentLine);
 
-      elements.push({
-        type: "p",
-        tags: [createTextTag(textFromCurrentPositionToEnd)],
-        id: uuidv4(),
-      });
+      const element = parseParagraph(text, index, endOfCurrentLineIndex);
 
-      index = endOfCurrentLine;
+      elements.push(element);
+      index = endOfCurrentLineIndex;
     }
 
     const isIndexLessThanTextLength = index < text.length;
