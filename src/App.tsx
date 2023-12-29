@@ -1,21 +1,22 @@
-import { FC, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 import "./App.css";
 import { parseMarkdownElements } from "./parseMarkdownElements";
+import { MarkdownElement } from "./types";
 
-export type MarkdownElement = {
-  // TODO: add more types
-  type: "h1";
-  content: string;
-  id: string;
-};
-
-type MarkdownComponentType = FC<{ children: ReactNode }>;
+type FunctionalComponentWithChildren = (props: {
+  children?: ReactNode;
+}) => ReactElement;
+type FunctionalComponentWithoutChildren = () => ReactElement;
+type MarkdownComponentType =
+  | FunctionalComponentWithChildren
+  | FunctionalComponentWithoutChildren;
 
 const MarkdownComponents: Record<
   MarkdownElement["type"],
   MarkdownComponentType
 > = {
   h1: ({ children }) => <h1>{children}</h1>,
+  breakpoint: () => <br />,
 };
 
 const DefaultComponent: MarkdownComponentType = ({ children }) => (
@@ -51,11 +52,16 @@ export function App() {
             {markdownElements.map((markdownElement) => {
               const Component =
                 MarkdownComponents[markdownElement.type] || DefaultComponent;
-              return (
-                <Component key={markdownElement.id}>
-                  {markdownElement.content}
-                </Component>
-              );
+
+              if (markdownElement.type === "breakpoint") {
+                return <Component key={markdownElement.id} />;
+              } else {
+                return (
+                  <Component key={markdownElement.id}>
+                    {markdownElement.content}
+                  </Component>
+                );
+              }
             })}
           </div>
         </div>
