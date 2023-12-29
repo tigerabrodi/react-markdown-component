@@ -1,73 +1,65 @@
-import { v4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import { GetTypesStartingWithPrefix, MarkdownElement } from "./types";
 
 const BREAKPOINT = "\n\n";
 const NEWLINE = "\n";
 
-const GET_ENTIRE_HEADING_LEVEL_REGEX = /#/g; // This will match all #s. `g` means global, so it will match all #s.
+const REGEX_HEADING = /^#+/; // ^ means start of string, #+ means one or more '#'
 
-type HeadingLevel = GetTypesStartingWithPrefix<MarkdownElement, "h">;
-
-function getHeadingLevel(textareaContent: string) {
-  return textareaContent.match(GET_ENTIRE_HEADING_LEVEL_REGEX)
-    ?.length as number;
+function getHeadingLevel(text: string): number {
+  const match = text.match(REGEX_HEADING);
+  const fullMatch = match && match[0];
+  return fullMatch ? fullMatch.length : 0;
 }
 
-function getHeadingEnd(textareaContent: string, headingStart: number) {
-  return textareaContent.includes(NEWLINE)
-    ? textareaContent.indexOf(NEWLINE, headingStart)
-    : textareaContent.length;
+function parseHeading(
+  text: string,
+  startIndex: number
+): { element: MarkdownElement; endIndex: number } {
+  const headingLevel = getHeadingLevel(text.slice(startIndex));
+
+  const isNotEndingWithNewline = text.indexOf(NEWLINE, startIndex) === -1;
+  const headingEndIndex = isNotEndingWithNewline
+    ? text.length
+    : text.indexOf(NEWLINE, startIndex);
+
+  const additionToSkipSpaceAfterHash = 1;
+
+  const content = text
+    .slice(
+      startIndex + headingLevel + additionToSkipSpaceAfterHash,
+      headingEndIndex
+    )
+    .trim(); // only trims beginning and end
+
+  return {
+    element: {
+      type: `h${headingLevel}` as GetTypesStartingWithPrefix<
+        MarkdownElement,
+        "h"
+      >,
+      content,
+      id: uuidv4(),
+    },
+    endIndex: headingEndIndex,
+  };
 }
 
-export function parseMarkdownElements(
-  textareaContent: string
-): MarkdownElement[] {
+export function parseMarkdownElements(text: string): MarkdownElement[] {
   const elements: MarkdownElement[] = [];
-
   let index = 0;
 
-  while (index < textareaContent.length) {
-    if (textareaContent[index] === "#") {
-      // Get heading level via counting number of #s through Regex
-      const headingLevel = getHeadingLevel(textareaContent.slice(index));
-      console.log("headingLevel", headingLevel);
-
-      const indexOfSpace = index + headingLevel;
-
-      // If #s do not end with space, then we do not want to parse yet
-      if (textareaContent[indexOfSpace] !== " ") {
-        continue;
-      }
-
-      const headingStart = indexOfSpace + 1;
-      const headingEnd = getHeadingEnd(textareaContent, headingStart);
-      const headingContent = textareaContent.slice(headingStart, headingEnd);
-
-      elements.push({
-        type: `h${headingLevel}` as HeadingLevel,
-        content: headingContent,
-        id: v4(),
-      });
-
-      index = headingEnd;
-
-      continue;
+  while (index < text.length) {
+    if (text[index] === "#") {
+      const { element, endIndex } = parseHeading(text, index);
+      elements.push(element);
+      index = endIndex;
+    } else if (text.startsWith(BREAKPOINT, index)) {
+      elements.push({ type: "breakpoint", id: uuidv4() });
+      index += BREAKPOINT.length;
+    } else {
+      index++;
     }
-
-    // Handle double line break for breakpoint
-    if (textareaContent.substring(index, index + 2) === BREAKPOINT) {
-      elements.push({
-        type: "breakpoint",
-        id: v4(),
-      });
-      index += 2; // Move past the double line break
-      continue;
-    } else if (textareaContent[index] === "\n") {
-      index++; // Skip the single line break
-      continue;
-    }
-
-    index++; // Move to next character
   }
 
   return elements;
