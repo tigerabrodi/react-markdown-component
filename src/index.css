@@ -30,3 +30,42 @@ body {
   color: rgb(3, 40, 59);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom Resets */
+button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+a {
+  text-decoration: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 0.7;
+  color: inherit;
+}
+
+input,
+textarea {
+  border: none;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+input:disabled,
+button:disabled {
+  opacity: 0.5;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px black !important;
+}
