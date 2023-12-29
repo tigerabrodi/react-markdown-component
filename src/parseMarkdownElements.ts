@@ -1,10 +1,14 @@
 import { v4 as uuidv4 } from "uuid";
-import { GetTypesStartingWithPrefix, MarkdownElement } from "./types";
+import { GetTypesStartingWithPrefix, MarkdownElement, Tag } from "./types";
 
 const BREAKPOINT = "\n\n";
 const NEWLINE = "\n";
 
 const REGEX_HEADING = /^#+/; // ^ means start of string, #+ means one or more '#'
+
+function createTextTag(text: string): Tag {
+  return { type: "normal", content: text, id: uuidv4() };
+}
 
 function getHeadingLevel(text: string): number {
   const match = text.match(REGEX_HEADING);
@@ -38,7 +42,7 @@ function parseHeading(
         MarkdownElement,
         "h"
       >,
-      content,
+      tags: [createTextTag(content)],
       id: uuidv4(),
     },
     endIndex: headingEndIndex,
@@ -76,7 +80,7 @@ export function parseMarkdownElements(text: string): MarkdownElement[] {
 
       elements.push({
         type: "p",
-        content: textFromCurrentPositionToEnd,
+        tags: [createTextTag(textFromCurrentPositionToEnd)],
         id: uuidv4(),
       });
 

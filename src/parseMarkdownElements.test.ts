@@ -9,7 +9,13 @@ describe("headings", () => {
     expect(elements).toEqual([
       {
         type: "h1",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
     ] satisfies MarkdownElement[]);
@@ -21,7 +27,13 @@ describe("headings", () => {
     expect(elements).toEqual([
       {
         type: "h1",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -37,7 +49,13 @@ describe("headings", () => {
     expect(elements).toEqual([
       {
         type: "h1",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -46,7 +64,13 @@ describe("headings", () => {
       },
       {
         type: "h2",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -55,7 +79,13 @@ describe("headings", () => {
       },
       {
         type: "h3",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -71,7 +101,13 @@ describe("headings", () => {
     expect(elements).toEqual([
       {
         type: "p",
-        content: "#Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "#Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
     ] satisfies MarkdownElement[]);
@@ -85,7 +121,13 @@ describe("paragraphs", () => {
     expect(elements).toEqual([
       {
         type: "p",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
     ] satisfies MarkdownElement[]);
@@ -97,7 +139,13 @@ describe("paragraphs", () => {
     expect(elements).toEqual([
       {
         type: "p",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -113,7 +161,13 @@ describe("paragraphs", () => {
     expect(elements).toEqual([
       {
         type: "p",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -122,7 +176,13 @@ describe("paragraphs", () => {
       },
       {
         type: "p",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -131,7 +191,13 @@ describe("paragraphs", () => {
       },
       {
         type: "p",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -148,7 +214,13 @@ describe("paragraphs", () => {
     expect(elements).toEqual([
       {
         type: "h1",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -157,7 +229,13 @@ describe("paragraphs", () => {
       },
       {
         type: "p",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -166,7 +244,13 @@ describe("paragraphs", () => {
       },
       {
         type: "h2",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -175,7 +259,13 @@ describe("paragraphs", () => {
       },
       {
         type: "p",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -184,7 +274,13 @@ describe("paragraphs", () => {
       },
       {
         type: "h3",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {
@@ -193,7 +289,13 @@ describe("paragraphs", () => {
       },
       {
         type: "p",
-        content: "Hello World",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
         id: expect.any(String),
       },
       {

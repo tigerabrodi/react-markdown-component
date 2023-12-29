@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode, useState } from "react";
 import "./App.css";
 import { parseMarkdownElements } from "./parseMarkdownElements";
-import { MarkdownElement } from "./types";
+import { MarkdownElement, Tag } from "./types";
 
 type FunctionalComponentWithChildren = (props: {
   children?: ReactNode;
@@ -23,6 +23,15 @@ const MarkdownComponents: Record<
   h6: ({ children }) => <h6>{children}</h6>,
   p: ({ children }) => <p>{children}</p>,
   breakpoint: () => <br />,
+};
+
+const TagComponents: Record<
+  Tag["type"],
+  (props: { children: ReactNode }) => ReactElement
+> = {
+  bold: ({ children }) => <strong>{children}</strong>,
+  italic: ({ children }) => <em>{children}</em>,
+  normal: ({ children }) => <>{children}</>,
 };
 
 const DefaultComponent: MarkdownComponentType = ({ children }) => (
@@ -64,7 +73,13 @@ export function App() {
               } else {
                 return (
                   <Component key={markdownElement.id}>
-                    {markdownElement.content}
+                    {markdownElement.tags.map((tag) => {
+                      const TagComponent = TagComponents[tag.type];
+
+                      return (
+                        <TagComponent key={tag.id}>{tag.content}</TagComponent>
+                      );
+                    })}
                   </Component>
                 );
               }

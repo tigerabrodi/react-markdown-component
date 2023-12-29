@@ -3,15 +3,16 @@ export type GetTypesStartingWithPrefix<
   Prefix extends string
 > = Type extends `${Prefix}${infer _}` ? Type : never;
 
-type Tag = {
-  type: "normal" | "bold";
+export type Tag = {
+  type: "normal" | "bold" | "italic";
   content: string;
+  id: string;
 };
 
 export type MarkdownElement =
   | {
       type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
-      content: Array<Tag>;
+      tags: Array<Tag>;
       id: string;
     }
   | {
