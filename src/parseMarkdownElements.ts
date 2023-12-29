@@ -1,7 +1,8 @@
 import { v4 } from "uuid";
 import { GetTypesStartingWithPrefix, MarkdownElement } from "./types";
 
-const BREAKPOINT = "\n";
+const BREAKPOINT = "\n\n";
+const NEWLINE = "\n";
 
 const GET_ENTIRE_HEADING_LEVEL_REGEX = /#/g; // This will match all #s. `g` means global, so it will match all #s.
 
@@ -13,8 +14,8 @@ function getHeadingLevel(textareaContent: string) {
 }
 
 function getHeadingEnd(textareaContent: string, headingStart: number) {
-  return textareaContent.includes(BREAKPOINT)
-    ? textareaContent.indexOf(BREAKPOINT, headingStart)
+  return textareaContent.includes(NEWLINE)
+    ? textareaContent.indexOf(NEWLINE, headingStart)
     : textareaContent.length;
 }
 
@@ -23,17 +24,22 @@ export function parseMarkdownElements(
 ): MarkdownElement[] {
   const elements: MarkdownElement[] = [];
 
-  for (let i = 0; i < textareaContent.length; i++) {
-    if (textareaContent[i] === "#") {
+  let index = 0;
+
+  while (index < textareaContent.length) {
+    if (textareaContent[index] === "#") {
       // Get heading level via counting number of #s through Regex
-      const headingLevel = getHeadingLevel(textareaContent.slice(i));
+      const headingLevel = getHeadingLevel(textareaContent.slice(index));
+      console.log("headingLevel", headingLevel);
+
+      const indexOfSpace = index + headingLevel;
 
       // If #s do not end with space, then we do not want to parse yet
-      if (textareaContent[i + headingLevel] !== " ") {
+      if (textareaContent[indexOfSpace] !== " ") {
         continue;
       }
 
-      const headingStart = i + headingLevel + 1;
+      const headingStart = indexOfSpace + 1;
       const headingEnd = getHeadingEnd(textareaContent, headingStart);
       const headingContent = textareaContent.slice(headingStart, headingEnd);
 
@@ -42,14 +48,26 @@ export function parseMarkdownElements(
         content: headingContent,
         id: v4(),
       });
+
+      index = headingEnd;
+
+      continue;
     }
 
-    if (textareaContent[i] === BREAKPOINT) {
+    // Handle double line break for breakpoint
+    if (textareaContent.substring(index, index + 2) === BREAKPOINT) {
       elements.push({
         type: "breakpoint",
         id: v4(),
       });
+      index += 2; // Move past the double line break
+      continue;
+    } else if (textareaContent[index] === "\n") {
+      index++; // Skip the single line break
+      continue;
     }
+
+    index++; // Move to next character
   }
 
   return elements;

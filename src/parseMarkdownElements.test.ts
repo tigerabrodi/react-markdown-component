@@ -16,11 +16,36 @@ describe("headings", () => {
   });
 
   it("should parse heading one with breakpoint", () => {
-    const markdown = "# Hello World\n";
+    const markdown = "# Hello World\n\n";
     const elements = parseMarkdownElements(markdown);
     expect(elements).toEqual([
       {
         type: "h1",
+        content: "Hello World",
+        id: expect.any(String),
+      },
+      {
+        type: "breakpoint",
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+
+  it.only("should parse multiple headings with breakpoints", () => {
+    const markdown = "# Hello World\n\n## Hello World\n";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "h1",
+        content: "Hello World",
+        id: expect.any(String),
+      },
+      {
+        type: "breakpoint",
+        id: expect.any(String),
+      },
+      {
+        type: "h2",
         content: "Hello World",
         id: expect.any(String),
       },
