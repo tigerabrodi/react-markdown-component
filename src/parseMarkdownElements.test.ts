@@ -65,3 +65,17 @@ describe("headings", () => {
     ] satisfies MarkdownElement[]);
   });
 });
+
+describe("paragraphs", () => {
+  it("should parse a single paragraph", () => {
+    const markdown = "Hello World";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        content: "Hello World",
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+});

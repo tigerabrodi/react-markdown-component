@@ -21,6 +21,7 @@ const MarkdownComponents: Record<
   h4: ({ children }) => <h4>{children}</h4>,
   h5: ({ children }) => <h5>{children}</h5>,
   h6: ({ children }) => <h6>{children}</h6>,
+  p: ({ children }) => <p>{children}</p>,
   breakpoint: () => <br />,
 };
 

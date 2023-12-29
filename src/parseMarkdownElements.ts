@@ -58,7 +58,19 @@ export function parseMarkdownElements(text: string): MarkdownElement[] {
       elements.push({ type: "breakpoint", id: uuidv4() });
       index += BREAKPOINT.length;
     } else {
-      index++;
+      const endOfCurrentLine =
+        text.indexOf(NEWLINE, index) === -1
+          ? text.length
+          : text.indexOf(NEWLINE, index);
+      const textFromCurrentPositionToEnd = text.slice(index, endOfCurrentLine);
+
+      elements.push({
+        type: "p",
+        content: textFromCurrentPositionToEnd,
+        id: uuidv4(),
+      });
+
+      index = endOfCurrentLine;
     }
   }
 
