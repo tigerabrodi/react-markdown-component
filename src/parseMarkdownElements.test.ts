@@ -307,7 +307,7 @@ describe("paragraphs", () => {
 });
 
 describe("bold", () => {
-  it.only("should parse a single bold", () => {
+  it("should parse a single bold", () => {
     const markdown = "**Hello World**";
     const elements = parseMarkdownElements(markdown);
     expect(elements).toEqual([
@@ -340,6 +340,114 @@ describe("bold", () => {
         ],
         id: expect.any(String),
       },
+      {
+        type: "breakpoint",
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+
+  it("should parse bold with normal text", () => {
+    const markdown = "Hello **World**";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello ",
+            id: expect.any(String),
+          },
+          {
+            type: "bold",
+            content: "World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+
+  it("should parse bold with normal text with a breakpoint", () => {
+    const markdown = "Hello **World**\n\n";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello ",
+            id: expect.any(String),
+          },
+          {
+            type: "bold",
+            content: "World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+      {
+        type: "breakpoint",
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+
+  it("should parse bold with normal text, breakpoint and two headings", () => {
+    const markdown = "Hello **World**\n\n# Hello World\n\n## Hello World\n\n";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello ",
+            id: expect.any(String),
+          },
+          {
+            type: "bold",
+            content: "World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+      {
+        type: "breakpoint",
+        id: expect.any(String),
+      },
+      {
+        type: "h1",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+      {
+        type: "breakpoint",
+        id: expect.any(String),
+      },
+      {
+        type: "h2",
+        tags: [
+          {
+            type: "normal",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+
       {
         type: "breakpoint",
         id: expect.any(String),
