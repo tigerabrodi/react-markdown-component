@@ -455,3 +455,45 @@ describe("bold", () => {
     ] satisfies MarkdownElement[]);
   });
 });
+
+describe("italics", () => {
+  it.only("should parse a single italics", () => {
+    const markdown = "*Hello World*";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        tags: [
+          {
+            type: "italic",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+
+  it("should parse a single italics with a breakpoint", () => {
+    const markdown = "*Hello World*\n\n";
+    const elements = parseMarkdownElements(markdown);
+    expect(elements).toEqual([
+      {
+        type: "p",
+        tags: [
+          {
+            type: "italic",
+            content: "Hello World",
+            id: expect.any(String),
+          },
+        ],
+        id: expect.any(String),
+      },
+      {
+        type: "breakpoint",
+        id: expect.any(String),
+      },
+    ] satisfies MarkdownElement[]);
+  });
+});
