@@ -72,6 +72,13 @@ export function parseMarkdownElements(text: string): MarkdownElement[] {
 
       index = endOfCurrentLine;
     }
+
+    const isIndexLessThanTextLength = index < text.length;
+    const isAtNewline = text[index] === NEWLINE;
+    const isNotAtBreakpoint = !text.startsWith(BREAKPOINT, index);
+    if (isIndexLessThanTextLength && isAtNewline && isNotAtBreakpoint) {
+      index++; // skip newline
+    }
   }
 
   return elements;
