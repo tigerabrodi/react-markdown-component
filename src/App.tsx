@@ -1,6 +1,6 @@
-import { FC, ReactNode, useCallback, useEffect, useState } from "react";
-import debounce from "lodash.debounce";
+import { FC, ReactNode, useState } from "react";
 import "./App.css";
+import { parseMarkdownElements } from "./parseMarkdownElements";
 
 export type MarkdownElement = {
   // TODO: add more types
@@ -28,21 +28,6 @@ export function App() {
     []
   );
 
-  // useCallback is required for debounce to work
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedMarkdownOnTextareaChange = useCallback(
-    debounce(async (textareaContent: string) => {
-      // do something with the textareaContent
-      console.log(textareaContent);
-    }, 500),
-
-    []
-  );
-
-  useEffect(() => {
-    debouncedMarkdownOnTextareaChange(textareaContent);
-  }, [textareaContent, debouncedMarkdownOnTextareaChange]);
-
   return (
     <main>
       <h1>Markdown Preview Playground</h1>
@@ -53,7 +38,10 @@ export function App() {
             placeholder="# This is a title"
             id="markdown"
             value={textareaContent}
-            onChange={(event) => setTextareaContent(event.target.value)}
+            onChange={(event) => {
+              setTextareaContent(event.target.value);
+              setMarkdownElements(parseMarkdownElements(event.target.value));
+            }}
           />
         </div>
 

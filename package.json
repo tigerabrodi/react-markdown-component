@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@types/uuid": "^9.0.7",
-    "lodash.debounce": "^4.0.8",
     "monaco-editor": "^0.45.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,7 +19,6 @@
     "vitest": "^1.1.0"
   },
   "devDependencies": {
-    "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",

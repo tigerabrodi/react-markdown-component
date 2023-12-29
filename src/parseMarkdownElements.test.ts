@@ -8,6 +8,7 @@ it("should parse a single heading", () => {
     {
       type: "h1",
       content: "Hello World",
+      id: expect.any(String),
     },
   ]);
 });
