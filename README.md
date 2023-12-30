@@ -14,6 +14,8 @@ Example: `indexOf('hello world', 'world')` returns 6, 6 being the index of the 7
 
 `\n` is the newline character. It's used to indicate a new line in a string. It's treated as a single character. Twice would not mean 4 characters, but 2.
 
+Twice would mean breakpoint. `\n\n` -> breakpoint.
+
 ## startsWith
 
 string.startsWith takes a second argument, which is the index to start searching from.
