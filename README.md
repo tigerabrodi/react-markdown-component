@@ -36,3 +36,8 @@ string.startsWith takes a second argument, which is the index to start searching
 ## string.match
 
 string.match takes a regex as an argument, and returns an array of matches. If there are no matches, it returns null. The first item in the array is the full match, and the rest are the capture groups. Capture groups are the parts of the regex that are wrapped in parentheses.
+
+# Demo
+
+https://github.com/narutosstudent/react-markdown-component/assets/49603590/1d82fb7b-ba49-464c-9fb2-4f2a7347f141
+
