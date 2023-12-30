@@ -2,6 +2,19 @@
 
 Building a Markdown component from scratch.
 
+# TODO
+
+- [x] Headings
+- [x] Breakpoints
+- [x] Paragraphs
+- [x] Bold
+- [x] Italics
+- [ ] Bold/Italic nested in each other
+- [ ] Links
+- [ ] Images
+- [ ] Code
+- [ ] Blockquotes
+
 # Learnings
 
 ## IndexOf
