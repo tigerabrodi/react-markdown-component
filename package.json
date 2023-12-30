@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@types/uuid": "^9.0.7",
-    "monaco-editor": "^0.45.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.1",
