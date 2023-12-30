@@ -96,6 +96,18 @@ function parseItalicText(
   };
 }
 
+function createTextTagBeforeSpecialText(
+  text: string,
+  specialTextStartIndex: number
+): Tag {
+  const textBeforeSpecialText = text.slice(0, specialTextStartIndex);
+  return createTextTag(textBeforeSpecialText);
+}
+
+function hasNormalTextBeforeSpecialText(index: number) {
+  return index > 0;
+}
+
 function parseParagraph(
   text: string,
   startIndex: number,
@@ -111,23 +123,16 @@ function parseParagraph(
 
     if (boldResult || italicResult) {
       if (italicResult && boldResult) {
-        // 1. Check if italic is before bold
-        // else we know bold is before italic
-        // we can do so with the start index, whichever is smaller is first
-        // after we know which is first, we can add the text before the first tag
-        // we have to parse the text after the first tag again, because the index will be different
-        // after that we need to check start index again, and add the normal text before the second tag
-
         const isItalicBeforeBold =
           italicResult.italicStartIndex < boldResult.boldStartIndex;
         if (isItalicBeforeBold) {
-          if (italicResult.italicStartIndex > 0) {
-            // `italicResult.startIndex > 0` means italic text is not at the beginning of the paragraph, so from the beginning of the paragraph to the start of the italic text is normal text
-            const textBeforeItalic = remainingText.slice(
-              0,
-              italicResult.italicStartIndex
+          if (hasNormalTextBeforeSpecialText(italicResult.italicStartIndex)) {
+            tags.push(
+              createTextTagBeforeSpecialText(
+                remainingText,
+                italicResult.italicStartIndex
+              )
             );
-            tags.push(createTextTag(textBeforeItalic));
           }
 
           tags.push(italicResult.tag);
@@ -139,13 +144,17 @@ function parseParagraph(
           const boldResultAfterItalic = parseBoldText(remainingTextAfterItalic);
 
           if (boldResultAfterItalic) {
-            if (boldResultAfterItalic.boldStartIndex > 0) {
-              // `boldResult.startIndex > 0` means bold text is not at the beginning of the paragraph, so from the beginning of the paragraph to the start of the bold text is normal text
-              const textBeforeBold = remainingTextAfterItalic.slice(
-                0,
+            if (
+              hasNormalTextBeforeSpecialText(
                 boldResultAfterItalic.boldStartIndex
+              )
+            ) {
+              tags.push(
+                createTextTagBeforeSpecialText(
+                  remainingTextAfterItalic,
+                  boldResultAfterItalic.boldStartIndex
+                )
               );
-              tags.push(createTextTag(textBeforeBold));
             }
 
             tags.push(boldResultAfterItalic.tag);
@@ -153,13 +162,13 @@ function parseParagraph(
             index += boldResultAfterItalic.afterEndBoldIndex; // Move index past the bold text, we need to do += because we are in the remainingTextAfterItalic
           }
         } else {
-          if (boldResult.boldStartIndex > 0) {
-            // `boldResult.startIndex > 0` means bold text is not at the beginning of the paragraph, so from the beginning of the paragraph to the start of the bold text is normal text
-            const textBeforeBold = remainingText.slice(
-              0,
-              boldResult.boldStartIndex
+          if (hasNormalTextBeforeSpecialText(boldResult.boldStartIndex)) {
+            tags.push(
+              createTextTagBeforeSpecialText(
+                remainingText,
+                boldResult.boldStartIndex
+              )
             );
-            tags.push(createTextTag(textBeforeBold));
           }
 
           tags.push(boldResult.tag);
@@ -171,13 +180,17 @@ function parseParagraph(
           const italicResultAfterBold = parseItalicText(remainingTextAfterBold);
 
           if (italicResultAfterBold) {
-            if (italicResultAfterBold.italicStartIndex > 0) {
-              // `italicResult.startIndex > 0` means italic text is not at the beginning of the paragraph, so from the beginning of the paragraph to the start of the italic text is normal text
-              const textBeforeItalic = remainingTextAfterBold.slice(
-                0,
+            if (
+              hasNormalTextBeforeSpecialText(
                 italicResultAfterBold.italicStartIndex
+              )
+            ) {
+              tags.push(
+                createTextTagBeforeSpecialText(
+                  remainingTextAfterBold,
+                  italicResultAfterBold.italicStartIndex
+                )
               );
-              tags.push(createTextTag(textBeforeItalic));
             }
 
             tags.push(italicResultAfterBold.tag);
@@ -188,13 +201,13 @@ function parseParagraph(
       }
 
       if (italicResult && !boldResult) {
-        if (italicResult.italicStartIndex > 0) {
-          // `italicResult.startIndex > 0` means italic text is not at the beginning of the paragraph, so from the beginning of the paragraph to the start of the italic text is normal text
-          const textBeforeItalic = remainingText.slice(
-            0,
-            italicResult.italicStartIndex
+        if (hasNormalTextBeforeSpecialText(italicResult.italicStartIndex)) {
+          tags.push(
+            createTextTagBeforeSpecialText(
+              remainingText,
+              italicResult.italicStartIndex
+            )
           );
-          tags.push(createTextTag(textBeforeItalic));
         }
 
         tags.push(italicResult.tag);
@@ -202,13 +215,13 @@ function parseParagraph(
       }
 
       if (!italicResult && boldResult) {
-        if (boldResult.boldStartIndex > 0) {
-          // `boldResult.startIndex > 0` means bold text is not at the beginning of the paragraph, so from the beginning of the paragraph to the start of the bold text is normal text
-          const textBeforeBold = remainingText.slice(
-            0,
-            boldResult.boldStartIndex
+        if (hasNormalTextBeforeSpecialText(boldResult.boldStartIndex)) {
+          tags.push(
+            createTextTagBeforeSpecialText(
+              remainingText,
+              boldResult.boldStartIndex
+            )
           );
-          tags.push(createTextTag(textBeforeBold));
         }
 
         // Add the bold text
@@ -217,7 +230,8 @@ function parseParagraph(
       }
     }
 
-    if (!boldResult && !italicResult) {
+    const isJustPlainText = !boldResult && !italicResult;
+    if (isJustPlainText) {
       tags.push(createTextTag(remainingText));
       break;
     }
