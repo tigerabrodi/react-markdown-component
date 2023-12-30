@@ -15,6 +15,46 @@ Building a Markdown component from scratch.
 - [ ] Code
 - [ ] Blockquotes
 
+# Data Structure
+
+Since I do TDD, I started out small. A naive first approach:
+
+```ts
+export type MarkdownElement =
+  | {
+      type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
+      content: string;
+      id: string;
+    }
+  | {
+      type: "breakpoint";
+      id: string;
+    };
+```
+
+This works for plain strings. However, I want to be able to add bold and italic text inside the normal text. A better approach is having a list of tags instead of plain strings.
+
+```ts
+export type Tag = {
+  type: "normal" | "bold" | "italic";
+  content: string;
+  id: string;
+};
+
+export type MarkdownElement =
+  | {
+      type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
+      tags: Array<Tag>;
+      id: string;
+    }
+  | {
+      type: "breakpoint";
+      id: string;
+    };
+```
+
+Now, we can have a paragraph with bold and italic text inside it. This is a good start. Though, we would have to change it to support nesting e.g. bold inside italic.
+
 # Learnings
 
 ## IndexOf
@@ -40,4 +80,3 @@ string.match takes a regex as an argument, and returns an array of matches. If t
 # Demo
 
 https://github.com/narutosstudent/react-markdown-component/assets/49603590/1d82fb7b-ba49-464c-9fb2-4f2a7347f141
-
