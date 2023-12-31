@@ -31,13 +31,7 @@ function mapTagComponents(
   switch(tag.type) {
     case "bold": return ({ children }) => <strong>{children}</strong>;
     case "italic": return ({ children }) => <em>{children}</em>;
-    case "link": {
-      if (tag.attributes) {
-        return ({ children }) =>
-          <a href={tag.attributes}>{children}</a>
-        ;
-       } else throw TypeError;
-    }
+    case "link": return ({ children }) => <a href={tag.attributes}>{children}</a>;
     case "normal": return ({ children }) => <>{children}</>
   }
 }
