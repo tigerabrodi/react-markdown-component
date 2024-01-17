@@ -5,7 +5,6 @@ export type GetTypesStartingWithPrefix<
 
 export type Tag = {
   type: "normal" | "bold" | "italic" | "link";
-  type: "normal" | "bold" | "italic";
   content: string;
   attributes?: string;
   id: string;
