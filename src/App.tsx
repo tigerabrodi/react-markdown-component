@@ -76,7 +76,7 @@ export function App() {
                 return (
                   <Component key={markdownElement.id}>
                     {markdownElement.tags.map((tag) => {
-                      const TagComponent = mapTagComponents(tag.type);
+                      const TagComponent = mapTagComponents(tag);
 
                       return (
                         <TagComponent key={tag.id}>{tag.content}</TagComponent>
